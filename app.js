@@ -90,10 +90,11 @@ var items = [
   },
 ];
 
+
 function updateCart() {
   let cart = 0;
-  for (index = 0; index < items.length; index++) {
-    cart = cart + items[index].quantity;
+  for (let index = 0; index < items.length; index++) {
+    cart += items[index].quantity;
   }
   cartValue.innerHTML = cart;
 }
@@ -111,22 +112,34 @@ var finalCents = 0;
 function updatePrice() {
   let totalPriceInCents = 0;
 
-  for (index = 0; index < items.length; index++) {
-    totalPriceInCents =
-      totalPriceInCents +
+  for (let index = 0; index < items.length; index++) {
+    totalPriceInCents +=
       items[index].quantity * (items[index].dollars * 100 + items[index].cents);
   }
   finalDollars = Math.floor(totalPriceInCents / 100);
   finalCents = totalPriceInCents % 100;
 }
 
+let whatsappLink =
+  "https://api.whatsapp.com/send?phone=8360459984&text=Order%20Details%20:";
+
+function updateWhatsappLink() {
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].quantity !== 0) {
+      whatsappLink += "%0A" + items[i].name + "%0A" + items[i].quantity;
+    }
+  }
+
+  whatsappLink += "%0A" + "Total%0APrice:" + finalDollars+"$" + "%0A" + finalCents + "c";
+}
 
 cartButton.onclick = () => {
   updatePrice();
-
+  updateWhatsappLink();
+  window.open(whatsappLink, "_blank");
 
   for (let index = 0; index < items.length; index++) {
-    if (items[index].quantity != 0) {
+    if (items[index].quantity !== 0) {
       console.log(
         "Item name: " +
           items[index].name +
